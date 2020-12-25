@@ -1,8 +1,10 @@
 package com.example.expensemanager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,19 +27,27 @@ public class MainActivity extends AppCompatActivity {
     private TextView mForgetPassword;
     private TextView mSignUpHere;
 
+    private ProgressDialog mDialog;
+
+    //Firebase...
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth=FirebaseAuth.getInstance();
+        mDialog = new ProgressDialog(this);
+
         loginDetail();
     }
     public void loginDetail(){
-        mEmail.findViewById(R.id.email_login);
-        mPass.findViewById(R.id.password_login);
-        btnLogIn.findViewById(R.id.btn_login);
-        mForgetPassword.findViewById(R.id.fogret_password);
-        mSignUpHere.findViewById(R.id.signup_reg);
+        mEmail=findViewById(R.id.email_login);
+        mPass=findViewById(R.id.password_login);
+        btnLogIn=findViewById(R.id.btn_login);
+        mForgetPassword=findViewById(R.id.fogret_password);
+        mSignUpHere=findViewById(R.id.signup_reg);
 
         btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,9 +60,26 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 if (TextUtils.isEmpty(pass)){
-                    mPass.setError("Email bắt buộc...");
+                    mPass.setError("Password bắt buộc...");
                     return;
                 }
+
+                mDialog.setMessage("Đang kiểm tra...");
+                mDialog.show();
+
+                mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            mDialog.dismiss();
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            Toast.makeText(getApplicationContext(), "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                        }else{
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            Toast.makeText(getApplicationContext(), "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
