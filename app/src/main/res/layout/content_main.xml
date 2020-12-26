@@ -21,12 +21,12 @@
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="677dp"
         android:id="@+id/main_frame"
+        android:layout_width="match_parent"
+        android:layout_height="587dp"
         android:layout_above="@+id/bottomNavigation"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true">
 
     </FrameLayout>
 

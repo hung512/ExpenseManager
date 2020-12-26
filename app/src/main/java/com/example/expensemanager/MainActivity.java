@@ -38,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth=FirebaseAuth.getInstance();
+
+        if(mAuth.getCurrentUser()!=null){
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        }
+
         mDialog = new ProgressDialog(this);
 
         loginDetail();
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             Toast.makeText(getApplicationContext(), "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                         }else{
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             Toast.makeText(getApplicationContext(), "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                         }
                     }
