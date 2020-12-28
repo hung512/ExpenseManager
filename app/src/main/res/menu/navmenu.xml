@@ -8,6 +8,6 @@
         android:title="Expense"
         android:icon="@drawable/expense"/>
     <item android:id="@+id/income"
-        android:title="Icome"
+        android:title="Income"
         android:icon="@drawable/income"/>
 </menu>

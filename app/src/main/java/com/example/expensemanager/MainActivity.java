@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             Toast.makeText(getApplicationContext(), "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                         }else{
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            mDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                         }
                     }
