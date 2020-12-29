@@ -121,6 +121,9 @@ public class DashBoardFragment extends Fragment {
         mIncomeDatabase= FirebaseDatabase.getInstance().getReference("IncomeData").child(uid);
         mExpenseDatabase= FirebaseDatabase.getInstance().getReference().child("ExpenseData").child(uid);
 
+        mIncomeDatabase.keepSynced(true);
+        mExpenseDatabase.keepSynced(true);
+
         //connect floating button to layout
         fab_main_btn=myview.findViewById(R.id.fb_main_plus_btn);
         fab_income_btn=myview.findViewById(R.id.income_ft_btn);
@@ -423,6 +426,22 @@ public class DashBoardFragment extends Fragment {
             }
         };
         mRecyclerIncome.setAdapter(incomeAdapter);
+
+        FirebaseRecyclerAdapter<Data, ExpenseViewHolder>expenseAdapter= new FirebaseRecyclerAdapter<Data, ExpenseViewHolder>
+                (
+                        Data.class,
+                        R.layout.dashboard_expense,
+                        DashBoardFragment.ExpenseViewHolder.class,
+                        mExpenseDatabase
+                ) {
+            @Override
+            protected void populateViewHolder(ExpenseViewHolder expenseViewHolder, Data model, int i) {
+                expenseViewHolder.setExpenseType(model.getType());
+                expenseViewHolder.setExpenseAmmount(model.getAmount());
+                expenseViewHolder.setExpenseDate(model.getDate());
+            }
+        };
+        mRecyclerExpense.setAdapter(expenseAdapter);
     }
     //For Income Data
     public static class IncomeViewHolder extends RecyclerView.ViewHolder{
@@ -442,6 +461,31 @@ public class DashBoardFragment extends Fragment {
         }
         public void setIncomeDate(String date){
             TextView mDate=mIncomeView.findViewById(R.id.date_income_ds);
+            mDate.setText(date);
+        }
+    }
+
+    //For Expense Data
+    public static class ExpenseViewHolder extends RecyclerView.ViewHolder{
+
+        View mExpenseView;
+
+        public ExpenseViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mExpenseView=itemView;
+        }
+        public void setExpenseType(String type){
+            TextView mtype=mExpenseView.findViewById(R.id.type_expense_ds);
+            mtype.setText(type);
+        }
+        public void setExpenseAmmount(int ammount){
+            TextView mAmmount = mExpenseView.findViewById(R.id.ammount_expense_ds);
+
+            String strAmmount=String.valueOf(ammount);
+            mAmmount.setText(strAmmount);
+        }
+        public void setExpenseDate(String date){
+            TextView mDate=mExpenseView.findViewById(R.id.date_expense_ds);
             mDate.setText(date);
         }
     }
