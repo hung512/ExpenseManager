@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.expensemanager.Model.Data;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -73,6 +76,10 @@ public class DashBoardFragment extends Fragment {
     private DatabaseReference mIncomeDatabase;
     private DatabaseReference mExpenseDatabase;
 
+    //Recycler view
+    private RecyclerView mRecyclerIncome;
+    private RecyclerView mRecyclerExpense;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -126,6 +133,11 @@ public class DashBoardFragment extends Fragment {
         //Total income and expense set...
         totalIncomeResult=myview.findViewById(R.id.income_set_result);
         totalExpenseResult=myview.findViewById(R.id.expense_set_result);
+
+        //Recycler
+        mRecyclerIncome=myview.findViewById(R.id.recycler_income);
+        mRecyclerExpense=myview.findViewById(R.id.recycler_expense);
+
 
         //animation connect...
         FadOpen= AnimationUtils.loadAnimation(getActivity(), R.anim.fade_open);
@@ -203,6 +215,20 @@ public class DashBoardFragment extends Fragment {
 
             }
         });
+
+        //Recycler
+        LinearLayoutManager layoutManagerIncome=new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        layoutManagerIncome.setStackFromEnd(true);
+        layoutManagerIncome.setReverseLayout(true);
+        mRecyclerIncome.setHasFixedSize(true);
+        mRecyclerIncome.setLayoutManager(layoutManagerIncome);
+
+        LinearLayoutManager layoutManagerExpense=new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        layoutManagerExpense.setReverseLayout(true);
+        layoutManagerExpense.setStackFromEnd(true);
+        mRecyclerExpense.setHasFixedSize(true);
+        mRecyclerExpense.setLayoutManager(layoutManagerExpense);
+
         return myview;
     }
 
@@ -378,4 +404,45 @@ public class DashBoardFragment extends Fragment {
         dialog.show();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Data, IncomeViewHolder>incomeAdapter=new FirebaseRecyclerAdapter<Data, IncomeViewHolder>
+                (
+                        Data.class,
+                        R.layout.dashboard_income,
+                        DashBoardFragment.IncomeViewHolder.class,
+                        mIncomeDatabase
+                ) {
+            @Override
+            protected void populateViewHolder(IncomeViewHolder viewHolder, Data model, int i) {
+                viewHolder.setIncomeType(model.getType());
+                viewHolder.setIncomeAmmount(model.getAmount());
+                viewHolder.setIncomeDate(model.getDate());
+            }
+        };
+        mRecyclerIncome.setAdapter(incomeAdapter);
+    }
+    //For Income Data
+    public static class IncomeViewHolder extends RecyclerView.ViewHolder{
+        View mIncomeView;
+        public IncomeViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mIncomeView=itemView;
+        }
+        public void setIncomeType(String type){
+            TextView mtype=mIncomeView.findViewById(R.id.type_income_ds);
+            mtype.setText(type);
+        }
+        public void setIncomeAmmount(int ammount){
+            TextView mAmmount=mIncomeView.findViewById(R.id.ammount_income_ds);
+            String strAmmount=String.valueOf(ammount);
+            mAmmount.setText(strAmmount);
+        }
+        public void setIncomeDate(String date){
+            TextView mDate=mIncomeView.findViewById(R.id.date_income_ds);
+            mDate.setText(date);
+        }
+    }
 }
