@@ -26,6 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link IncomeFragment#newInstance} factory method to
@@ -52,6 +55,13 @@ public class IncomeFragment extends Fragment {
     //button for update and delete
     private Button btnUpdate;
     private Button btnDelete;
+
+    //Data Values
+    private String type;
+    private String note;
+    private int amount;
+
+    private String post_key;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -157,6 +167,11 @@ public class IncomeFragment extends Fragment {
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        post_key=getRef(i).getKey();
+                        type=model.getType();
+                        note=model.getNote();
+                        amount=model.getAmount();
                         updateDataItem();
                     }
                 });
@@ -204,6 +219,16 @@ public class IncomeFragment extends Fragment {
         edtNote=myview.findViewById(R.id.note_edt);
         edtType=myview.findViewById(R.id.type_edt);
 
+        //set Data
+        edtType.setText(type);
+        edtType.setSelection(type.length());
+
+        edtNote.setText(note);
+        edtNote.setSelection(note.length());
+
+        edtAmmount.setText(String.valueOf(amount));
+        edtAmmount.setSelection(String.valueOf(amount).length());
+
         btnUpdate=myview.findViewById(R.id.btn_upd_Update);
         btnDelete=myview.findViewById(R.id.btnuPD_Delete);
 
@@ -211,11 +236,29 @@ public class IncomeFragment extends Fragment {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                type=edtType.getText().toString().trim();
+                note=edtNote.getText().toString().trim();
+
+                String mdammount=String.valueOf(amount);
+
+                mdammount=edtAmmount.getText().toString().trim();
+
+                int myAmmount=Integer.parseInt(mdammount);
+
+                String mDate= DateFormat.getDateInstance().format(new Date());
+
+                Data data=new Data(myAmmount, type, note, post_key, mDate);
+
+                mIncomeDatabase.child(post_key).setValue(data);
+
+                dialog.dismiss();
             }
         });
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                mIncomeDatabase.child(post_key).removeValue();
                 dialog.dismiss();
             }
         });
