@@ -184,6 +184,25 @@ public class DashBoardFragment extends Fragment {
             }
         });
 
+        //Calculate total expense...
+        mExpenseDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int totalsum=0;
+                for(DataSnapshot mysnap:dataSnapshot.getChildren()){
+                    Data data=mysnap.getValue(Data.class);
+                    totalsum+=data.getAmount();
+
+                    String strTotalsum=String.valueOf(totalsum);
+                    totalExpenseResult.setText(strTotalsum);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         return myview;
     }
 
