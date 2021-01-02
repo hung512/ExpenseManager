@@ -126,7 +126,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 break;
             case R.id.calender:
-                startActivity(new Intent(getApplicationContext(), CalendarActivity.class));
+//                startActivity(new Intent(getApplicationContext(), CalendarActivity.class));
+                fragment = new CalendarFragment();
                 break;
         }
 

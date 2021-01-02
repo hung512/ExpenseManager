@@ -1,9 +1,5 @@
 package com.example.expensemanager;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         loginDetail();
     }
+
     public void loginDetail(){
         mEmail=findViewById(R.id.email_login);
         mPass=findViewById(R.id.password_login);

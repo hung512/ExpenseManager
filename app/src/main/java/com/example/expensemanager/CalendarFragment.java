@@ -4,30 +4,40 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
 
-public class CalendarActivity extends AppCompatActivity{
+public class CalendarFragment extends Fragment {
 
-    Button dateButton, timeButton;
-    TextView dateTextView, timeTextView;
+    private Button dateButton, timeButton;
+    private TextView dateTextView, timeTextView;
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.fragment_calendar, container, false);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
-
-        dateButton = findViewById(R.id.dateButton);
-        timeButton = findViewById(R.id.timeButton);
-        dateTextView = findViewById(R.id.dateTextView);
-        timeTextView = findViewById(R.id.timeTextView);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        dateButton = view.findViewById(R.id.dateButton);
+        timeButton = view.findViewById(R.id.timeButton);
+        dateTextView = view.findViewById(R.id.dateTextView);
+        timeTextView = view.findViewById(R.id.timeTextView);
 
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,13 +58,14 @@ public class CalendarActivity extends AppCompatActivity{
         int HOUR= calendar.get(Calendar.HOUR);
         int MINUTE= calendar.get(Calendar.MINUTE);
 
-        boolean is24HourFormat= DateFormat.is24HourFormat(this);
+        boolean is24HourFormat= DateFormat.is24HourFormat(getContext());
 
-        TimePickerDialog timePickerDialog= new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog timePickerDialog= new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                 String timeString= " " + hour + ":" + minute;
                 timeTextView.setText(timeString);
+
 
 //                Calendar calendar= Calendar.getInstance();
 //                calendar.set(Calendar.HOUR, hour);
@@ -74,7 +85,7 @@ public class CalendarActivity extends AppCompatActivity{
         int MONTH= cal.get(Calendar.MONTH);
         int DATE= cal.get(Calendar.DATE);
 
-        DatePickerDialog datePickerDialog= new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog= new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int date) {
                 String dateString = year + " " + month + " "+ date;
@@ -91,4 +102,5 @@ public class CalendarActivity extends AppCompatActivity{
         }, YEAR, MONTH, DATE);
         datePickerDialog.show();
     }
+
 }
