@@ -61,15 +61,15 @@ public class MainActivity extends AppCompatActivity {
                 String pass = mPass.getText().toString().trim();
 
                 if(TextUtils.isEmpty(email)){
-                    mEmail.setError("Email bắt buộc...");
+                    mEmail.setError("Required Email...");
                     return;
                 }
                 if (TextUtils.isEmpty(pass)){
-                    mPass.setError("Password bắt buộc...");
+                    mPass.setError("Required Password...");
                     return;
                 }
 
-                mDialog.setMessage("Đang kiểm tra...");
+                mDialog.setMessage("Proccesing...");
                 mDialog.show();
 
                 mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -78,10 +78,10 @@ public class MainActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             mDialog.dismiss();
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                            Toast.makeText(getApplicationContext(), "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Login Successfully", Toast.LENGTH_SHORT).show();
                         }else{
                             mDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Login Faild", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
